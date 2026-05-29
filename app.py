@@ -36,18 +36,26 @@ if prompt := st.chat_input("Ketikkan pertanyaanmu di sini..."):
 
     with st.chat_message("assistant"):
         with st.spinner("Waguri sedang berpikir..."):
-            # 1. Dapatkan jawaban teks
+            # 1. Dapatkan jawaban teks utama
             jawaban = st.session_state.waguri_engine.jawab_pertanyaan(prompt)
             st.markdown(jawaban)
             
-            # 2. Render teks menjadi suara (Error Handling diterapkan)
-            try:
-                tts = gTTS(text=jawaban, lang='id')
-                audio_bytes = BytesIO()
-                tts.write_to_fp(audio_bytes)
-                # Menampilkan audio player di web
-                st.audio(audio_bytes, format='audio/mp3', autoplay=True)
-            except Exception as e:
-                st.warning("Pita suara Waguri sedang gangguan sementara.")
+            # 2. Menu Tambahan (Copy & Suara) disembunyikan dalam menu lipat
+            with st.expander("🛠️ Opsi: Salin Teks & Dengarkan Suara"):
+                
+                # Fitur Copy (Menggunakan blok markdown Streamlit yang punya tombol copy bawaan)
+                st.caption("📝 Salin Jawaban:")
+                st.code(jawaban, language="markdown")
+                
+                # Fitur Suara (TIDAK AUTOPLAY, user harus klik tombol Play)
+                st.caption("🔊 Dengarkan Jawaban:")
+                try:
+                    tts = gTTS(text=jawaban, lang='id')
+                    audio_bytes = BytesIO()
+                    tts.write_to_fp(audio_bytes)
+                    # Perhatikan: autoplay=False 
+                    st.audio(audio_bytes, format='audio/mp3', autoplay=False)
+                except Exception as e:
+                    st.warning("Pita suara Waguri sedang gangguan.")
 
     st.session_state.messages.append({"role": "assistant", "content": jawaban})
