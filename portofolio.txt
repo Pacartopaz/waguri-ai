@@ -1,0 +1,31 @@
+INFORMASI KANDIDAT:
+Nama: Haitamim Jahran Mahendra
+Peran: Mahasiswa Teknik Informatika (Semester 6) di UIN Syarif Hidayatullah Jakarta dengan IPK 3.47.
+Fokus Karir: Aspiring AI Engineer yang sangat antusias mendalami integrasi Artificial Intelligence ke dalam ekosistem Full Stack Development.
+Target Utama: Menjadi bagian dari Apple Developer Academy untuk berkolaborasi, belajar dari mentor industri, dan menerapkan pemikiran algoritmik dalam pengembangan teknologi Apple.
+
+SERTIFIKASI & PENGHARGAAN:
+- Belajar Machine Learning untuk Pemula (Dicoding, April 2026)
+- Memulai Pemrograman dengan Python (Dicoding, Maret 2026)
+- Belajar Dasar AI (Dicoding, Februari 2026)
+- Center for Language Development (UIN Syarif Hidayatullah Jakarta)
+
+KEAHLIAN TEKNIS (HARD SKILLS):
+- Programming Logic: Python (Functions, Data Structures, OOP, Error Handling).
+- Web Development: HTML5, CSS3, Streamlit.
+- AI & Data Science: Machine Learning Fundamentals, K-NN, Decision Tree, Random Forest, K-Means Clustering, TF-IDF, Cosine Similarity, RAG (Retrieval-Augmented Generation), LangChain, FAISS.
+
+PROYEK UNGGULAN 1: NLP & Penggabungan Dataset Hadis (Data Engineering)
+Deskripsi: Membangun pipeline data untuk menggabungkan dataset sanad dan matan hadis Shahih Muslim berbahasa Arab.
+Tantangan: Mengatasi "ilusi kemiripan" akibat tag XML yang merusak skor akurasi (Cosine Similarity).
+Solusi: Menerapkan Data Cleansing tingkat lanjut (menghapus tag XML dan harakat), mengekstraksi fitur menggunakan TF-IDF berbasis karakter, dan mencocokkannya dengan algoritma K-Nearest Neighbors (K-NN).
+
+PROYEK UNGGULAN 2: Machine Learning Project (Dicoding - April 2026)
+Deskripsi: Melakukan pemrosesan dan analisis data nasabah untuk menemukan pola serta prediksi otomatis.
+Implementasi: Menerapkan algoritma K-Means Clustering untuk mengelompokkan karakteristik nasabah. Untuk klasifikasi target nasabah, membangun model menggunakan Decision Tree dan Random Forest beserta tuning parameter untuk memastikan akurasi prediksi.
+
+PROYEK UNGGULAN 3: Konverter dan Penerjemah EPUB Arab (Kapita Selekta)
+Deskripsi: Membangun aplikasi web AI berbasis Streamlit untuk membedah, mengekstrak, dan menerjemahkan teks filologi dari dokumen .epub berbahasa Arab kuno menggunakan model Gemini 2.5-Flash secara real-time.
+
+PROYEK UNGGULAN 4: Movie Recommender System (Research Project)
+Deskripsi: Mengeksplorasi implementasi algoritma Content-Based Filtering menggunakan ekstraksi teks TF-IDF dan Cosine Similarity untuk memberikan saran film otomatis demi mengatasi fenomena "Choice Paralysis".
