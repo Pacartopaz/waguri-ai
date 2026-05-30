@@ -4,7 +4,7 @@ import requests
 from engine import WaguriBrain
 from dotenv import load_dotenv
 
-# Memuat variabel lingkungan dari file .env
+# Memuat variabel lingkungan dari file .env (Untuk mode lokal di laptop)
 load_dotenv()
 
 # Konfigurasi halaman utama Streamlit
@@ -29,7 +29,7 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-# Kolom Input Chat Pengenang
+# Kolom Input Chat Pengguna
 if prompt := st.chat_input("Ketikkan pertanyaanmu di sini..."):
     
     # Tampilkan pesan pengguna
@@ -47,39 +47,53 @@ if prompt := st.chat_input("Ketikkan pertanyaanmu di sini..."):
             # 2. Menu Tambahan (Copy & Pilihan Mendengarkan Suara)
             with st.expander("🛠️ Opsi: Salin Teks & Dengarkan Suara"):
                 
-                # Fitur Salin Teks (Menggunakan blok st.code agar muncul tombol copy bawaan)
+                # Fitur Salin Teks
                 st.caption("📝 Salin Jawaban:")
                 st.code(jawaban, language="markdown")
                 
-                # Fitur Sintesis Suara via Fish Audio API (Autoplay dimatikan)
+                # Fitur Sintesis Suara via Fish Audio API
                 st.caption("🔊 Dengarkan Suara Waguri:")
                 try:
-                    fish_api_key = os.getenv("FISH_AUDIO_API_KEY")
-                    fish_model_id = os.getenv("FISH_AUDIO_MODEL_ID")
+                    # Mengambil kunci dengan aman (Cek lokal .env dulu)
+                    fish_api_key = os.environ.get("FISH_AUDIO_API_KEY")
+                    fish_model_id = os.environ.get("FISH_AUDIO_MODEL_ID")
                     
-                    # Endpoint resmi REST API Fish Audio
-                    url = "https://api.fish.audio/v1/tts"
-                    headers = {
-                        "Authorization": f"Bearer {fish_api_key}",
-                        "Content-Type": "application/json"
-                    }
-                    payload = {
-                        "text": jawaban,
-                        "reference_id": fish_model_id,
-                        "format": "mp3"
-                    }
+                    # Jika di lokal tidak ada, coba ambil dari Streamlit Cloud Secrets
+                    if not fish_api_key:
+                        try:
+                            fish_api_key = st.secrets["FISH_AUDIO_API_KEY"]
+                            fish_model_id = st.secrets["FISH_AUDIO_MODEL_ID"]
+                        except:
+                            pass # Kunci tetap kosong jika di Streamlit Cloud tidak ada
                     
-                    # Mengirim permintaan ke server Fish Audio
-                    response = requests.post(url, json=payload, headers=headers)
-                    
-                    # Jika response sukses (HTTP 200), render pemutar audio Streamlit
-                    if response.status_code == 200:
-                        st.audio(response.content, format='audio/mp3', autoplay=False)
+                    # Cegah eksekusi jika kunci masih kosong atau teks placeholder
+                    if not fish_api_key or "isi_dengan" in fish_api_key:
+                        st.error("Kunci API Fish Audio belum ditemukan di .env (Lokal) maupun Secrets (Streamlit Cloud)!")
                     else:
-                        st.warning("Pita suara Waguri sedang istirahat (Kuota harian habis atau API bermasalah).")
+                        # Persiapan komunikasi dengan server Fish Audio
+                        url = "https://api.fish.audio/v1/tts"
+                        headers = {
+                            "Authorization": f"Bearer {fish_api_key}",
+                            "Content-Type": "application/json"
+                        }
+                        payload = {
+                            "text": jawaban,
+                            "reference_id": fish_model_id,
+                            "format": "mp3"
+                        }
                         
+                        # Mengirim permintaan
+                        response = requests.post(url, json=payload, headers=headers)
+                        
+                        # Jika sukses (200), render pemutar audio
+                        if response.status_code == 200:
+                            st.audio(response.content, format='audio/mp3', autoplay=False)
+                        else:
+                            # Menampilkan pesan error spesifik dari Fish Audio jika gagal
+                            st.error(f"Pita suara Waguri sedang gangguan. Status: {response.status_code}. Detail: {response.text}")
+                            
                 except Exception as e:
-                    st.warning("Gagal terhubung ke server modul suara.")
+                    st.error(f"Sistem gagal terhubung ke internet: {e}")
 
     # Simpan jawaban ke riwayat obrolan
     st.session_state.messages.append({"role": "assistant", "content": jawaban})
